@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>alfajores
+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+:root{
+  --cream:#FBF1E2;
+  --cream-soft:#FFFBF5;
+  --paper:#FFFFFF;
+  --cacao:#000000;
+  --cacao-60:#000000;
+  --caramel:#9c4141;
+  --caramel-dark:#a03939;
+  --caramel-soft:#F1DDC0;
+  --frambuesa:#C65D7B;
+  --frambuesa-soft:#F6DDE4;
+  --sage:#6F8B57;
+  --sage-soft:#E2EAD7;
+  --clay:#C1543A;
+  --clay-soft:#F5DCD2;
+  --miel:#D9952F;
+  --miel-soft:#F8E6C2;
+  --line:#ada699;
+  --radius-lg:18px;
+  --radius-md:12px;
+  --radius-sm:8px;
+  --shadow-card:0 1px 2px rgba(58,24,17,.06), 0 8px 24px -12px rgba(58,24,17,.18);
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  background:var(--cream);
+  color:var(--cacao);
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:980px;margin:0 auto;padding:0 20px 60px}
+
+/* HEADER */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin:0 -20px 28px;padding:22px 28px;
+  background:linear-gradient(135deg,var(--caramel-dark),var(--caramel) 70%);
+  color:var(--cream-soft);
+  border-radius:0 0 22px 22px;
+  box-shadow:var(--shadow-card);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:44px;height:32px;flex-shrink:0}
+.brand h1{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:25px;margin:0;letter-spacing:.2px}
+.brand .tagline{margin:2px 0 0;font-size:12.5px;opacity:.85;letter-spacing:.3px}
+.today-badge{font-family:var(--font-mono);font-size:12px;background:rgba(255,255,255,.16);padding:7px 12px;border-radius:999px;white-space:nowrap}
+.pet-avatar{
+  width:72px;height:72px;border-radius:50%;
+  object-fit:cover;object-position:center 30%;
+  border:3px solid rgba(255,255,255,.45);
+  box-shadow:0 4px 14px rgba(0,0,0,.25);
+  flex-shrink:0;
+  margin-left:auto;
+}
+@media(max-width:720px){
+  .pet-avatar{width:52px;height:52px;border-width:2px;align-self:flex-end}
+}
+
+/* CARDS */
+.card{background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:22px 24px;margin-bottom:22px}
+.card h2{font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 16px}
+
+/* FORM */
+.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field>span{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--cacao-60)}
+input,select,textarea{
+  font-family:var(--font-body);font-size:14.5px;padding:10px 12px;
+  border:1.5px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--cream-soft);color:var(--cacao);width:100%;
+}
+textarea{resize:vertical;min-height:44px;font-family:var(--font-body)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--caramel);box-shadow:0 0 0 3px var(--caramel-soft)}
+.form-footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px;flex-wrap:wrap}
+.preview-total{font-size:14px;color:var(--cacao-60)}
+.preview-total strong{font-family:var(--font-mono);color:var(--cacao);font-size:16px}
+
+/* BUTTONS */
+button{font-family:var(--font-body);cursor:pointer;border:none;background:none}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--frambuesa);outline-offset:2px}
+button:disabled{opacity:.55;cursor:not-allowed}
+.btn-primary{
+  background:var(--caramel-dark);color:#fff;font-weight:700;font-size:14px;
+  padding:11px 22px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 16px -6px rgba(138,84,35,.6)}
+.btn-danger{background:var(--clay)}
+.btn-danger:hover:not(:disabled){box-shadow:0 6px 16px -6px rgba(193,84,58,.6)}
+.btn-secondary{
+  background:var(--cream-soft);border:1.5px solid var(--line);color:var(--cacao);
+  font-weight:600;font-size:13px;padding:9px 16px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-secondary:hover{border-color:var(--caramel)}
+.icon-btn{padding:6px;border-radius:8px;color:var(--cacao-60);display:inline-flex}
+.icon-btn:hover{background:var(--cream)}
+.icon-btn.danger:hover{background:var(--clay-soft);color:var(--clay)}
+
+/* STATS */
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:8px}
+.stat{background:var(--paper);border-radius:var(--radius-md);padding:14px 16px;box-shadow:var(--shadow-card);border-bottom:3px solid var(--caramel)}
+.stat.alert{border-bottom-color:var(--clay)}
+.stat-value{display:block;font-family:var(--font-mono);font-size:20px;font-weight:600;white-space:nowrap}
+.stat-label{font-size:11.5px;color:var(--cacao-60);text-transform:uppercase;letter-spacing:.5px}
+.filtro-resumen{font-size:12.5px;color:var(--cacao-60);margin:10px 0 18px 2px;min-height:16px}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none}
+.search-wrap input{padding-left:34px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:999px;background:var(--paper);border:1.5px solid var(--line);font-size:13px;font-weight:600;color:var(--cacao-60)}
+.chip.active{background:var(--cacao);color:#fff;border-color:var(--cacao)}
+
+/* TABLE */
+.table-card{padding:8px 10px 4px}
+table{width:100%;border-collapse:separate;border-spacing:0 8px}
+thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--cacao-60);padding:0 14px 6px;font-weight:700}
+tbody tr{background:var(--cream-soft)}
+tbody td{padding:12px 14px;font-size:13.5px;vertical-align:middle}
+tbody td:first-child{border-radius:10px 0 0 10px}
+tbody td:last-child{border-radius:0 10px 10px 0}
+tr.rojo td:first-child{box-shadow:inset 4px 0 0 var(--clay)}
+tr.naranja td:first-child{box-shadow:inset 4px 0 0 var(--miel)}
+tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
+.id-cell{font-family:var(--font-mono);font-size:12px;color:var(--cacao-60)}
+.id-cell .fecha{display:block;font-size:11px;opacity:.8}
+.cliente-cell{font-weight:700}
+.cliente-cell .nota-icon{margin-left:5px;cursor:help;opacity:.7}
+.producto-cell .relleno{display:block}
+.producto-cell .cobertura{display:block;font-size:12px;color:var(--cacao-60)}
+.total-cell{font-family:var(--font-mono);font-weight:600;white-space:nowrap}
+.acciones-cell{display:flex;gap:4px}
+
+/* ESTADO CHIPS */
+.estado-group{display:flex;gap:6px;flex-wrap:wrap}
+.toggle{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:5px 9px;border-radius:999px;background:var(--cream);border:1.5px solid var(--line);color:var(--cacao-60)}
+.toggle input{display:none}
+.toggle.on{background:var(--sage-soft);border-color:var(--sage);color:#3c5230}
+.toggle .dot{width:6px;height:6px;border-radius:50%;background:var(--line);flex-shrink:0}
+.toggle.on .dot{background:var(--sage)}
+
+/* STAMP (pagado) */
+.stamp{
+  display:inline-flex;align-items:center;justify-content:center;line-height:1;
+  border:2px solid var(--sage);color:var(--sage);background:transparent;
+  font-family:var(--font-display);font-weight:700;font-size:11px;letter-spacing:1.4px;
+  text-transform:uppercase;padding:5px 12px 4px;border-radius:999px;
+  transform:rotate(-7deg);position:relative;
+}
+.stamp::after{content:'';position:absolute;inset:2px;border:1px solid var(--sage);border-radius:999px}
+
+/* MOBILE CARDS */
+.mobile-list{display:none;flex-direction:column;gap:12px;padding:6px 4px 10px}
+.ticket{background:var(--cream-soft);border-radius:var(--radius-md);padding:14px 16px 14px 18px;position:relative;box-shadow:var(--shadow-card)}
+.ticket::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:4px;background:var(--clay)}
+.ticket.naranja::before{background:var(--miel)}
+.ticket.verde::before{background:var(--sage)}
+.ticket-top{display:flex;justify-content:space-between;gap:10px}
+.ticket-cliente{font-weight:700;font-size:15px}
+.ticket-detalle{margin:8px 0 0;font-size:13px;color:var(--cacao-60)}
+.ticket-id{font-family:var(--font-mono);font-size:11px;color:var(--cacao-60);text-align:right;white-space:nowrap}
+.ticket-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:8px;flex-wrap:wrap}
+.ticket-footer .total-cell{font-size:14px}
+.ticket-acciones{display:flex;align-items:center;gap:8px}
+
+/* EMPTY / LOADING */
+.empty-state,.loading-state{text-align:center;padding:46px 20px;color:var(--cacao-60)}
+.empty-state svg{opacity:.4;margin-bottom:10px}
+.empty-state h3{font-family:var(--font-display);color:var(--cacao);margin:0 0 6px;font-size:17px}
+.empty-state p{margin:0;font-size:13.5px}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(58,24,17,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal{background:var(--cream-soft);border-radius:var(--radius-lg);padding:24px;width:100%;max-width:420px;box-shadow:0 24px 60px -20px rgba(0,0,0,.4);max-height:90vh;overflow-y:auto;animation:modal-in .18s ease}
+.modal h3{font-family:var(--font-display);margin:0 0 16px;font-size:19px}
+.modal p{font-size:14px;color:var(--cacao-60);line-height:1.5}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+@keyframes modal-in{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:18px;right:18px;left:18px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:80;pointer-events:none}
+.toast{background:var(--cacao);color:#fff;padding:12px 18px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px -8px rgba(0,0,0,.4);animation:toast-in .25s ease;max-width:320px}
+.toast.error{background:var(--clay)}
+@keyframes toast-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+@media(max-width:720px){
+  table{display:none}
+  .mobile-list{display:flex}
+  .topbar{flex-direction:column;align-items:flex-start;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      
+        
+        
+        
+        
+        
+        
+        
+      </svg>
+      <div>
+        <h1>Alfajores</h1>
+        <p class="tagline">Brownie SPA</p>
+      </div>
+    </div>
+    <img src="data:image/jpeg;base64,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" class="pet-avatar" alt="mascota" aria-hidden="true">
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Nuevo pedido</h2>
+      <div class="field-grid">
+        <label class="field"><span>Cliente</span>
+          <input id="cliente" placeholder="Nombre del cliente" >
+        </label>
+        <label class="field"><span>Cantidad</span>
+          <input id="cantidad" type="number" min="1" value="1" >
+        </label>
+        <label class="field"><span>Relleno</span>
+          <select id="relleno">
+            <option>Sin relleno</option>
+            <option>bonbon</option><option>Oreo</option><option>Personalizado</option>
+          </select>
+        </label>
+        <label class="field" id="customRellenoWrap" hidden><span>¿Cuál relleno?</span>
+          <input id="rellenoCustom" placeholder="Ej: Lúcuma">
+        </label>
+        <label class="field"><span>Cobertura</span>
+          <select id="cobertura">
+            <option>Chocolate</option><option>Chocolate Blanco</option><option>Mixto</option>
+          </select>
+        </label>
+        <label class="field" id="mixtoChocWrap" hidden><span>Cant. Chocolate</span>
+          <input id="cantChocolate" type="number" min="0" value="0">
+        </label>
+        <label class="field" id="mixtoBlancWrap" hidden><span>Cant. Chocolate Blanco</span>
+          <input id="cantChocolateBlanco" type="number" min="0" value="0">
+        </label>
+        <label class="field"><span>Precio unidad</span>
+          <input id="precioUnidad" type="number" min="0" step="50" value="1000" >
+        </label>
+        <label class="field full"><span>Observaciones</span>
+          <textarea id="obs" placeholder="Ej: sin azúcar, retira a las 18 hs..."></textarea>
+        </label>
+      </div>
+      <div class="form-footer">
+        <span class="preview-total">Total <strong id="previewTotal">$1.000</strong></span>
+        <button type="button" class="btn-primary" id="btnAgregar" disabled>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          Agregar pedido
+        </button>
+      </div>
+    </section>
+
+    <section class="stats-strip">
+      <div class="stat"><span class="stat-value" id="sPedidos">0</span><span class="stat-label">Pedidos</span></div>
+      <div class="stat"><span class="stat-value" id="sAlf">0</span><span class="stat-label">Alfajores</span></div>
+      <div class="stat"><span class="stat-value" id="sVentas">$0</span><span class="stat-label">Ventas</span></div>
+      <div class="stat alert"><span class="stat-value" id="sPorCobrar">$0</span><span class="stat-label">Por cobrar</span></div>
+    </section>
+    <p class="filtro-resumen" id="resumenFiltro"></p>
+
+    <section class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="buscar" placeholder="Buscar por cliente o ID..." >
+      </div>
+      <div class="chips" id="chipsEstado">
+        <button type="button" class="chip active" data-filtro="todos">Todos</button>
+        <button type="button" class="chip" data-filtro="rojo">Pendientes</button>
+        <button type="button" class="chip" data-filtro="naranja">En preparación</button>
+        <button type="button" class="chip" data-filtro="verde">Completados</button>
+      </div>
+    </section>
+
+    <section class="card table-card">
+      <table>
+        <thead><tr>
+          <th>Pedido</th><th>Cliente</th><th>Cant.</th><th>Producto</th><th>Total</th><th>Estado</th><th>Acciones</th>
+        </tr></thead>
+        <tbody id="tabla"></tbody>
+      </table>
+      <div class="mobile-list" id="listaMobile"></div>
+      <div class="loading-state" id="loadingState">Cargando pedidos…</div>
+      <div class="empty-state" id="emptyState" hidden>
+        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+        <h3>No hay pedidos</h3>
+        <p>Todavía no se registró ningún pedido con estos filtros.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal: editar pedido -->
+<div class="modal-backdrop" id="modalEditar" hidden>
+  <div class="modal" role="dialog" aria-label="Editar pedido">
+    <h3>Editar pedido</h3>
+    <div class="field-grid">
+      <label class="field"><span>Cliente</span><input id="editCliente"></label>
+      <label class="field"><span>Cantidad</span><input id="editCantidad" type="number" min="1"></label>
+      <label class="field"><span>Relleno</span>
+        <select id="editRelleno">
+          <option>Sin relleno</option><option>Manjar</option><option>bonbon</option>
+          <option>Oreo</option><option>Personalizado</option>
+        </select>
+      </label>
+      <label class="field" id="editRellenoCustomWrap" hidden><span>¿Cuál relleno?</span><input id="editRellenoCustom"></label>
+      <label class="field"><span>Cobertura</span>
+        <select id="editCobertura"><option>Chocolate</option><option>Chocolate Blanco</option><option>Mixto</option></select>
+      </label>
+      <label class="field" id="editMixtoChocWrap" hidden><span>Cant. Chocolate</span><input id="editCantChocolate" type="number" min="0" value="0"></label>
+      <label class="field" id="editMixtoBlancWrap" hidden><span>Cant. Chocolate Blanco</span><input id="editCantChocolateBlanco" type="number" min="0" value="0"></label>
+      <label class="field"><span>Precio unidad</span><input id="editPrecioUnidad" type="number" min="0" step="50"></label>
+      <label class="field full"><span>Observaciones</span><textarea id="editObs"></textarea></label>
+    </div>
+    <div class="form-footer">
+      <span class="preview-total">Total <strong id="editTotalPreview">$0</strong></span>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" id="btnCancelarEditar">Cancelar</button>
+      <button type="button" class="btn-primary" id="btnGuardarEdicion">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: confirmar eliminación -->
+<div class="modal-backdrop" id="modalConfirm" hidden>
+  <div class="modal" style="max-width:340px" role="dialog" aria-label="Eliminar pedido">
+    <h3>Eliminar orden</h3>
+    <p>eliminar.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" id="btnCancelarConfirm">Cancelar</button>
+      <button type="button" class="btn-primary btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyB56CNnfPsZrTvSNRFfiAPQ4RgF6PqqknM",
+  authDomain: "marmotagorda.firebaseapp.com",
+  projectId: "marmotagorda",
+  storageBucket: "marmotagorda.firebasestorage.app",
+  messagingSenderId: "44081030088",
+  appId: "1:44081030088:web:1ef4cce0c8e57c3b9396fd"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const pedidosRef = collection(db,"pedidos");
+
+let pedidos = [];
+let filtroEstado = 'todos';
+let pendingDeleteId = null;
+let editId = null;
+
+const ICON_EDIT = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+const ICON_TRASH = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`;
+
+/* ---------- utilidades ---------- */
+function escapeHtml(str){
+  const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+  return String(str ?? '').replace(/[&<>"']/g, c => map[c]);
+}
+function money(n){
+  return '$' + Number(n||0).toLocaleString('es-CL');
+}
+function estado(p){
+  if(p.preparacion && p.hecho && p.pagado) return 'verde';
+  if(p.preparacion && p.hecho) return 'naranja';
+  return 'rojo';
+}
+function etiquetaEstado(e){
+  return {rojo:'Pendiente', naranja:'En preparación', verde:'Completado'}[e] || '';
+}
+function hoyStr(){
+  const hoy = new Date();
+  return `${hoy.getFullYear()}${String(hoy.getMonth()+1).padStart(2,'0')}${String(hoy.getDate()).padStart(2,'0')}`;
+}
+function formatFecha(iso){
+  if(!iso) return '';
+  return new Date(iso).toLocaleDateString('es-CL',{day:'2-digit',month:'short'});
+}
+function generarId(){
+  const fecha = hoyStr();
+  const deHoy = pedidos.filter(p=>(p.pedidoId||'').startsWith(fecha));
+  return `${fecha}-${String(deHoy.length+1).padStart(3,'0')}`;
+}
+function toast(msg, tipo){
+  const el = document.createElement('div');
+  el.className = 'toast' + (tipo==='error' ? ' error' : '');
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(()=>el.remove(), 3200);
+}
+
+/* ---------- render ---------- */
+function chip(id, campo, valor, label){
+  return `<label class="toggle ${valor?'on':''}" data-id="${id}" data-campo="${campo}" data-valor="${valor}">
+    <input type="checkbox" ${valor?'checked':''}>
+    <span class="dot"></span>${label}
+  </label>`;
+}
+function stampToggle(id){
+  return `<button type="button" class="stamp" data-id="${id}" data-campo="pagado" data-valor="true" title="Pagado · clic para deshacer">Pagado</button>`;
+}
+function estadoChips(p){
+  return `<div class="estado-group">
+    ${chip(p.id,'preparacion',p.preparacion,'Prep.')}
+    ${chip(p.id,'hecho',p.hecho,'Hecho')}
+    ${p.pagado ? stampToggle(p.id) : chip(p.id,'pagado',p.pagado,'Pagado')}
+  </div>`;
+}
+function coberturaTxt(p){
+  if(p.cobertura === 'Mixto'){
+    return `Mixto (${p.cantChocolate||0} choc · ${p.cantChocolateBlanco||0} blanco)`;
+  }
+  return p.cobertura || '';
+}
+function filaDesktop(p){
+  const e = estado(p);
+  const nota = p.observaciones ? `<span class="nota-icon" title="${escapeHtml(p.observaciones)}">📝</span>` : '';
+  return `
+  <tr class="${e}" title="${etiquetaEstado(e)}">
+    <td class="id-cell">${escapeHtml(p.pedidoId)}</td>
+    <td class="cliente-cell">${escapeHtml(p.cliente)}${nota}</td>
+    <td>${Number(p.cantidad)||0}</td>
+    <td class="producto-cell"><span class="relleno">${escapeHtml(p.relleno)}</span><span class="cobertura">${escapeHtml(coberturaTxt(p))}</span></td>
+    <td class="total-cell">${money(p.total)}</td>
+    <td>${estadoChips(p)}</td>
+    <td class="acciones-cell">
+      <button type="button" class="icon-btn" title="Editar" aria-label="Editar pedido" data-action="editar" data-id="${p.id}">${ICON_EDIT}</button>
+      <button type="button" class="icon-btn danger" title="Eliminar" aria-label="Eliminar pedido" data-action="eliminar" data-id="${p.id}">${ICON_TRASH}</button>
+    </td>
+  </tr>`;
+}
+function tarjetaMobile(p){
+  const e = estado(p);
+  const notaHtml = p.observaciones ? `<div class="ticket-detalle">📝 ${escapeHtml(p.observaciones)}</div>` : '';
+  return `
+  <div class="ticket ${e}">
+    <div class="ticket-top">
+      <div>
+        <div class="ticket-cliente">${escapeHtml(p.cliente)}</div>
+        <div class="ticket-detalle">${escapeHtml(p.relleno)} · ${escapeHtml(coberturaTxt(p))} · x${Number(p.cantidad)||0}</div>
+      </div>
+      <div class="ticket-id">${escapeHtml(p.pedidoId)}</div>
+    </div>
+    ${notaHtml}
+    <div class="ticket-footer">
+      ${estadoChips(p)}
+      <div class="ticket-acciones">
+        <strong class="total-cell">${money(p.total)}</strong>
+        <button type="button" class="icon-btn" aria-label="Editar pedido" data-action="editar" data-id="${p.id}">${ICON_EDIT}</button>
+        <button type="button" class="icon-btn danger" aria-label="Eliminar pedido" data-action="eliminar" data-id="${p.id}">${ICON_TRASH}</button>
+      </div>
+    </div>
+  </div>`;
+}
+function listaFiltrada(){
+  const filtroTexto = document.getElementById('buscar').value.toLowerCase().trim();
+  let lista = pedidos.filter(p=>
+    (p.cliente||'').toLowerCase().includes(filtroTexto) ||
+    (p.pedidoId||'').toLowerCase().includes(filtroTexto)
+  );
+  if(filtroEstado !== 'todos'){
+    lista = lista.filter(p=>estado(p)===filtroEstado);
+  }
+  return lista.slice().sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
+}
+function render(){
+  const lista = listaFiltrada();
+  const tabla = document.getElementById('tabla');
+  const listaMobile = document.getElementById('listaMobile');
+  const emptyState = document.getElementById('emptyState');
+
+  if(lista.length === 0){
+    tabla.innerHTML = '';
+    listaMobile.innerHTML = '';
+    emptyState.hidden = false;
+  } else {
+    emptyState.hidden = true;
+    tabla.innerHTML = lista.map(filaDesktop).join('');
+    listaMobile.innerHTML = lista.map(tarjetaMobile).join('');
+  }
+
+  let totalVentas=0, totalAlf=0, porCobrar=0;
+  lista.forEach(p=>{
+    totalVentas += Number(p.total)||0;
+    totalAlf += Number(p.cantidad)||0;
+    if(!p.pagado) porCobrar += Number(p.total)||0;
+  });
+
+  document.getElementById('sPedidos').textContent = lista.length;
+  document.getElementById('sAlf').textContent = totalAlf;
+  document.getElementById('sVentas').textContent = money(totalVentas);
+  document.getElementById('sPorCobrar').textContent = money(porCobrar);
+
+  const resumen = document.getElementById('resumenFiltro');
+  resumen.textContent = (lista.length !== pedidos.length) ? `Mostrando ${lista.length} de ${pedidos.length} pedidos` : '';
+}
+
+/* ---------- nuevo pedido ---------- */
+function actualizarPreview(){
+  const cant = Number(document.getElementById('cantidad').value)||0;
+  const precio = Number(document.getElementById('precioUnidad').value)||0;
+  document.getElementById('previewTotal').textContent = money(cant*precio);
+}
+async function agregar(){
+  const clienteEl = document.getElementById('cliente');
+  const cantidadEl = document.getElementById('cantidad');
+  const rellenoEl = document.getElementById('relleno');
+  const rellenoCustomEl = document.getElementById('rellenoCustom');
+  const coberturaEl = document.getElementById('cobertura');
+  const precioEl = document.getElementById('precioUnidad');
+  const obsEl = document.getElementById('obs');
+
+  const cliente = clienteEl.value.trim();
+  const cantidad = Number(cantidadEl.value);
+  const precioUnidad = Number(precioEl.value) || 1000;
+  let relleno = rellenoEl.value;
+
+  if(!cliente){ toast('falta el nombre del cliente','error'); clienteEl.focus(); return; }
+  if(!cantidad || cantidad < 1){ toast('La cantidad debe ser al menos 1','error'); cantidadEl.focus(); return; }
+  if(relleno === 'Personalizado'){
+    const custom = rellenoCustomEl.value.trim();
+    if(!custom){ toast('Falta especificar el relleno personalizado','error'); rellenoCustomEl.focus(); return; }
+    relleno = custom;
+  }
+
+  const esMixto = coberturaEl.value === 'Mixto';
+  if(esMixto){
+    const choc  = Number(document.getElementById('cantChocolate').value)||0;
+    const blanc = Number(document.getElementById('cantChocolateBlanco').value)||0;
+    const suma  = choc + blanc;
+    if(suma !== cantidad){
+      const diff = suma < cantidad ? `faltan ${cantidad - suma}` : `sobran ${suma - cantidad}`;
+      toast(`Mixto: la suma (${suma}) no coincide con la cantidad de alfajores (${cantidad}), ${diff}`, 'error');
+      return;
+    }
+  }
+
+  const btn = document.getElementById('btnAgregar');
+  btn.disabled = true;
+  try{
+    await addDoc(pedidosRef,{
+      pedidoId: generarId(),
+      cliente,
+      cantidad,
+      relleno,
+      cobertura: coberturaEl.value,
+      cantChocolate: esMixto ? Number(document.getElementById('cantChocolate').value)||0 : 0,
+      cantChocolateBlanco: esMixto ? Number(document.getElementById('cantChocolateBlanco').value)||0 : 0,
+      observaciones: obsEl.value.trim(),
+      precioUnidad,
+      total: cantidad * precioUnidad,
+      preparacion:true,
+      hecho:false,
+      pagado:false,
+      fecha:new Date().toISOString()
+    });
+    toast('Pedido agregado ✓');
+    clienteEl.value='';
+    cantidadEl.value=1;
+    rellenoEl.value='Sin relleno';
+    rellenoCustomEl.value='';
+    document.getElementById('customRellenoWrap').hidden = true;
+    coberturaEl.value='Chocolate';
+    document.getElementById('mixtoChocWrap').hidden = true;
+    document.getElementById('mixtoBlancWrap').hidden = true;
+    precioEl.value=1000;
+    obsEl.value='';
+    actualizarPreview();
+    clienteEl.focus();
+  }catch(err){
+    console.error(err);
+    toast('No se pudo agregar el pedido','error');
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+/* ---------- estado / eliminar ---------- */
+async function toggleEstado(id, campo, valor){
+  try{
+    await updateDoc(doc(db,"pedidos",id),{[campo]:!valor});
+  }catch(err){
+    console.error(err);
+    toast('No se pudo actualizar el pedido','error');
+  }
+}
+function pedirEliminar(id){
+  pendingDeleteId = id;
+  document.getElementById('modalConfirm').hidden = false;
+}
+function cerrarModalConfirm(){
+  pendingDeleteId = null;
+  document.getElementById('modalConfirm').hidden = true;
+}
+async function confirmarEliminar(){
+  if(!pendingDeleteId) return;
+  try{
+    await deleteDoc(doc(db,"pedidos",pendingDeleteId));
+    toast('Pedido eliminado');
+  }catch(err){
+    console.error(err);
+    toast('No se pudo eliminar el pedido','error');
+  }
+  cerrarModalConfirm();
+}
+
+/* ---------- editar ---------- */
+function actualizarPreviewEdit(){
+  const cant = Number(document.getElementById('editCantidad').value)||0;
+  const precio = Number(document.getElementById('editPrecioUnidad').value)||0;
+  document.getElementById('editTotalPreview').textContent = money(cant*precio);
+}
+function abrirEditar(id){
+  const p = pedidos.find(x=>x.id===id);
+  if(!p) return;
+  editId = id;
+  const opcionesEstandar = ['Manjar','bonbon','Oreo','Sin relleno'];
+  document.getElementById('editCliente').value = p.cliente||'';
+  document.getElementById('editCantidad').value = p.cantidad||1;
+  const editRellenoEl = document.getElementById('editRelleno');
+  if(opcionesEstandar.includes(p.relleno)){
+    editRellenoEl.value = p.relleno;
+    document.getElementById('editRellenoCustomWrap').hidden = true;
+  } else {
+    editRellenoEl.value = 'Personalizado';
+    document.getElementById('editRellenoCustomWrap').hidden = false;
+    document.getElementById('editRellenoCustom').value = p.relleno||'';
+  }
+  const editCob = p.cobertura||'Chocolate';
+  document.getElementById('editCobertura').value = editCob;
+  const isMixtoEdit = editCob === 'Mixto';
+  document.getElementById('editMixtoChocWrap').hidden = !isMixtoEdit;
+  document.getElementById('editMixtoBlancWrap').hidden = !isMixtoEdit;
+  document.getElementById('editCantChocolate').value = p.cantChocolate||0;
+  document.getElementById('editCantChocolateBlanco').value = p.cantChocolateBlanco||0;
+  document.getElementById('editPrecioUnidad').value = p.precioUnidad || Math.round((p.total||0)/(p.cantidad||1)) || 1000;
+  document.getElementById('editObs').value = p.observaciones||'';
+  actualizarPreviewEdit();
+  document.getElementById('modalEditar').hidden = false;
+}
+function cerrarModalEditar(){
+  editId = null;
+  document.getElementById('modalEditar').hidden = true;
+}
+async function guardarEdicion(){
+  if(!editId) return;
+  const cliente = document.getElementById('editCliente').value.trim();
+  const cantidad = Number(document.getElementById('editCantidad').value);
+  const precioUnidad = Number(document.getElementById('editPrecioUnidad').value) || 1000;
+  let relleno = document.getElementById('editRelleno').value;
+
+  if(!cliente){ toast('Falta el nombre del cliente','error'); return; }
+  if(!cantidad || cantidad<1){ toast('La cantidad debe ser al menos 1','error'); return; }
+  if(relleno === 'Personalizado'){
+    const custom = document.getElementById('editRellenoCustom').value.trim();
+    if(!custom){ toast('Falta especificar el relleno personalizado','error'); return; }
+    relleno = custom;
+  }
+
+  const coberturaEdit = document.getElementById('editCobertura').value;
+  const esMixtoEdit = coberturaEdit === 'Mixto';
+  if(esMixtoEdit){
+    const choc  = Number(document.getElementById('editCantChocolate').value)||0;
+    const blanc = Number(document.getElementById('editCantChocolateBlanco').value)||0;
+    const suma  = choc + blanc;
+    if(suma !== cantidad){
+      const diff = suma < cantidad ? `faltan ${cantidad - suma}` : `sobran ${suma - cantidad}`;
+      toast(`Mixto: la suma (${suma}) no coincide con la cantidad de alfajores (${cantidad}), ${diff}`, 'error');
+      return;
+    }
+  }
+  try{
+    await updateDoc(doc(db,"pedidos",editId),{
+      cliente,
+      cantidad,
+      relleno,
+      cobertura: coberturaEdit,
+      cantChocolate: esMixtoEdit ? Number(document.getElementById('editCantChocolate').value)||0 : 0,
+      cantChocolateBlanco: esMixtoEdit ? Number(document.getElementById('editCantChocolateBlanco').value)||0 : 0,
+      observaciones: document.getElementById('editObs').value.trim(),
+      precioUnidad,
+      total: cantidad * precioUnidad
+    });
+    toast('Pedido actualizado ✓');
+    cerrarModalEditar();
+  }catch(err){
+    console.error(err);
+    toast('No se pudo guardar los cambios','error');
+  }
+}
+
+/* ---------- filtros / relleno personalizado / csv ---------- */
+function setFiltro(f){
+  filtroEstado = f;
+  document.querySelectorAll('#chipsEstado .chip').forEach(c=>{
+    c.classList.toggle('active', c.dataset.filtro===f);
+  });
+  render();
+}
+function onRellenoChange(selectId, wrapId){
+  const val = document.getElementById(selectId).value;
+  document.getElementById(wrapId).hidden = (val !== 'Personalizado');
+}
+function onCoberturaChange(selectId, chocWrapId, blancWrapId){
+  const isMixto = document.getElementById(selectId).value === 'Mixto';
+  document.getElementById(chocWrapId).hidden = !isMixto;
+  document.getElementById(blancWrapId).hidden = !isMixto;
+}
+/* ---------- event delegation (dinámica) ---------- */
+document.addEventListener('click', e => {
+  // Toggle chip (checkbox) y stamp (pagado)
+  const tog = e.target.closest('[data-campo]');
+  if(tog){
+    e.preventDefault();
+    toggleEstado(tog.dataset.id, tog.dataset.campo, tog.dataset.valor === 'true');
+    return;
+  }
+  // Botones editar / eliminar
+  const act = e.target.closest('[data-action]');
+  if(act){
+    if(act.dataset.action === 'editar')   abrirEditar(act.dataset.id);
+    if(act.dataset.action === 'eliminar') pedirEliminar(act.dataset.id);
+    return;
+  }
+  // Cerrar modal al hacer clic en el backdrop
+  if(e.target.id === 'modalEditar')  cerrarModalEditar();
+  if(e.target.id === 'modalConfirm') cerrarModalConfirm();
+});
+
+/* ---------- listeners estáticos ---------- */
+const $ = id => document.getElementById(id);
+
+// Formulario nuevo pedido
+$('cliente').addEventListener('keydown',      e => e.key==='Enter' && (e.preventDefault(), agregar()));
+$('cantidad').addEventListener('input',        actualizarPreview);
+$('cantidad').addEventListener('keydown',      e => e.key==='Enter' && (e.preventDefault(), agregar()));
+$('relleno').addEventListener('change',        () => onRellenoChange('relleno','customRellenoWrap'));
+$('cobertura').addEventListener('change',      () => onCoberturaChange('cobertura','mixtoChocWrap','mixtoBlancWrap'));
+$('rellenoCustom').addEventListener('keydown', e => e.key==='Enter' && (e.preventDefault(), agregar()));
+$('precioUnidad').addEventListener('input',    actualizarPreview);
+$('precioUnidad').addEventListener('keydown',  e => e.key==='Enter' && (e.preventDefault(), agregar()));
+$('btnAgregar').addEventListener('click',      agregar);
+
+// Búsqueda y chips de filtro
+$('buscar').addEventListener('input', render);
+document.querySelectorAll('#chipsEstado .chip').forEach(btn =>
+  btn.addEventListener('click', () => setFiltro(btn.dataset.filtro))
+);
+
+// Modal editar
+$('editCantidad').addEventListener('input',    actualizarPreviewEdit);
+$('editPrecioUnidad').addEventListener('input', actualizarPreviewEdit);
+$('editRelleno').addEventListener('change',    () => onRellenoChange('editRelleno','editRellenoCustomWrap'));
+$('editCobertura').addEventListener('change',  () => onCoberturaChange('editCobertura','editMixtoChocWrap','editMixtoBlancWrap'));
+$('btnCancelarEditar').addEventListener('click',  cerrarModalEditar);
+$('btnGuardarEdicion').addEventListener('click',  guardarEdicion);
+
+// Modal confirmar eliminación
+$('btnCancelarConfirm').addEventListener('click',    cerrarModalConfirm);
+$('btnConfirmarEliminar').addEventListener('click',   confirmarEliminar);
+
+/* ---------- inicio ---------- */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    if(!$('modalEditar').hidden)  cerrarModalEditar();
+    if(!$('modalConfirm').hidden) cerrarModalConfirm();
+  }
+});
+
+onSnapshot(pedidosRef, snap => {
+  try{
+    pedidos = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    $('loadingState').hidden = true;
+    $('btnAgregar').disabled = false;
+    render();
+  }catch(err){
+    console.error('Error en render:', err);
+    toast('Error al mostrar los pedidos: ' + err.message, 'error');
+  }
+}, err => {
+  console.error('Firestore error:', err);
+  const cod = err.code || '';
+  const msg = cod === 'permission-denied'
+    ? 'Acceso denegado por reglas de Firestore. Revisa la configuración en la consola de Firebase.'
+    : 'No se pudieron cargar los pedidos. Revisa la conexión.';
+  $('loadingState').textContent = msg;
+  toast(msg, 'error');
+  $('btnAgregar').disabled = false;
+});
+</script>
+</body>
+</html>
