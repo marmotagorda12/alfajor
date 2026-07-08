@@ -92,6 +92,8 @@ body{
 /* CARDS */
 .card{background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);padding:22px 24px;margin-bottom:22px}
 .card h2{font-family:var(--font-display);font-size:18px;font-weight:700;margin:0 0 16px}
+.card-header-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.card-header-row h2{margin:0}
 
 /* FORM */
 .field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
@@ -147,13 +149,15 @@ button:disabled{opacity:.55;cursor:not-allowed}
 }
 
 /* COMBINACIONES (relleno / cobertura mixtos) */
+.group-title{
+  font-family:var(--font-display);font-weight:700;font-size:12px;color:var(--caramel-dark);
+  text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;padding-bottom:6px;
+  border-bottom:2px solid var(--caramel-soft);
+}
+.group-title:first-child{margin-top:4px}
 .combo-inline{display:flex;gap:16px;flex-wrap:wrap;margin-top:4px}
-.combo-inline label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--cacao-60);flex:1;min-width:120px}
-.combo-grid-wrap{overflow-x:auto;margin-top:6px}
-.combo-table{width:100%;border-collapse:collapse;font-size:12px;min-width:340px}
-.combo-table th,.combo-table td{padding:7px 6px;text-align:center;border:1px solid var(--line)}
-.combo-table th{background:var(--cream);font-weight:700;font-size:10.5px;color:var(--cacao-60)}
-.combo-table td input{padding:6px;text-align:center;min-width:56px}
+.combo-inline label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--cacao-60);flex:1;min-width:130px}
+.combo-grupo{margin-top:4px}
 
 /* TOOLBAR */
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
@@ -236,6 +240,26 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
 .toast.error{background:var(--clay)}
 @keyframes toast-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
+/* INVENTARIO */
+.inv-setup-group{margin-bottom:6px}
+.inv-group{margin-bottom:4px}
+.inv-rows{display:flex;flex-direction:column;background:var(--cream-soft);border-radius:var(--radius-md);box-shadow:var(--shadow-card);overflow:hidden}
+.inv-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.inv-row:last-child{border-bottom:none}
+.inv-row.agotado{opacity:.5}
+.inv-row-label{font-weight:600;font-size:13.5px}
+.inv-row-sub{font-size:11.5px;color:var(--cacao-60);margin-top:1px}
+.inv-row-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.inv-count{font-family:var(--font-mono);font-size:17px;font-weight:700;min-width:26px;text-align:center}
+.inv-btn{
+  width:38px;height:38px;border-radius:var(--radius-sm);font-size:19px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;
+  background:var(--paper);border:1.5px solid var(--line);color:var(--cacao);
+}
+.inv-btn:active:not(:disabled){transform:scale(.92)}
+.inv-btn.minus{color:var(--clay);border-color:var(--clay)}
+.inv-btn:disabled{opacity:.35}
+
 /* BRUJERIA */
 .brujeria-box{text-align:center;padding:70px 24px}
 .brujeria-box .emoji{font-size:44px;display:block;margin-bottom:14px}
@@ -261,9 +285,10 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
         </button>
         <div class="menu-dropdown" id="menuDropdown" hidden>
-          <button type="button" data-vista="pedidos" class="active"> Pedidos</button>
-          <button type="button" data-vista="ganancias"> ganancias</button>
-          <button type="button" data-vista="brujeria"> Brujería</button>
+          <button type="button" data-vista="pedidos" class="active">Pedidos</button>
+          <button type="button" data-vista="ganancias">Sistema de ganancias</button>
+          <button type="button" data-vista="inventario">Inventario</button>
+          <button type="button" data-vista="brujeria">Brujería</button>
         </div>
       </div>
       <div class="brand">
@@ -290,53 +315,17 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
           <input id="cantidad" type="number" min="1" value="1" >
         </label>
         <label class="field"><span>Cobertura</span>
-          <select id="cobertura">
-            <option>Chocolate negro</option><option>Chocolate blanco</option><option>Combinado</option>
-          </select>
+          <select id="cobertura"></select>
         </label>
         <label class="field"><span>Relleno</span>
-          <select id="relleno">
-            <option>Manjar</option><option>Manjar Coco</option><option>Manjar Oreo</option><option>Combinada</option>
-          </select>
+          <select id="relleno"></select>
         </label>
         <label class="field"><span>Precio unidad</span>
           <input id="precioUnidad" type="number" min="0" step="50" value="1000" >
         </label>
-        <div class="field full" id="comboCoberturaWrap" hidden>
-          <span>Cobertura combinada · cantidad por tipo</span>
-          <div class="combo-inline">
-            <label>Chocolate negro<input id="cantChocolate" type="number" min="0" value="0"></label>
-            <label>Chocolate blanco<input id="cantChocolateBlanco" type="number" min="0" value="0"></label>
-          </div>
-        </div>
-        <div class="field full" id="comboRellenoWrap" hidden>
-          <span>Relleno combinado · cantidad por tipo</span>
-          <div class="combo-inline">
-            <label>Manjar<input id="cantManjar" type="number" min="0" value="0"></label>
-            <label>Manjar Coco<input id="cantManjarCoco" type="number" min="0" value="0"></label>
-            <label>Manjar Oreo<input id="cantManjarOreo" type="number" min="0" value="0"></label>
-          </div>
-        </div>
-        <div class="field full" id="comboGridWrap" hidden>
-          <span>Combinación cobertura × relleno · cantidad por cada uno</span>
-          <div class="combo-grid-wrap">
-            <table class="combo-table">
-              <thead><tr><th></th><th>Manjar</th><th>Manjar Coco</th><th>Manjar Oreo</th></tr></thead>
-              <tbody>
-                <tr><th>Choc. negro</th>
-                  <td><input id="gridNegroManjar" type="number" min="0" value="0"></td>
-                  <td><input id="gridNegroManjarCoco" type="number" min="0" value="0"></td>
-                  <td><input id="gridNegroManjarOreo" type="number" min="0" value="0"></td>
-                </tr>
-                <tr><th>Choc. blanco</th>
-                  <td><input id="gridBlancoManjar" type="number" min="0" value="0"></td>
-                  <td><input id="gridBlancoManjarCoco" type="number" min="0" value="0"></td>
-                  <td><input id="gridBlancoManjarOreo" type="number" min="0" value="0"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div class="field full" id="comboCoberturaWrap" hidden></div>
+        <div class="field full" id="comboRellenoWrap" hidden></div>
+        <div class="field full" id="comboGridWrap" hidden></div>
         <label class="field full"><span>Observaciones</span>
           <textarea id="obs" placeholder=""></textarea>
         </label>
@@ -389,10 +378,12 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
     <section class="card">
       <h2>Resumen general</h2>
       <div class="stats-strip">
-        <div class="stat good"><span class="stat-value" id="gIngresos">$0</span><span class="stat-label">Ingresos completados</span></div>
+        <div class="stat good"><span class="stat-value" id="gIngresos">$0</span><span class="stat-label">Ingresos pedidos</span></div>
+        <div class="stat good"><span class="stat-value" id="gIngresosTerreno">$0</span><span class="stat-label">Ventas en terreno</span></div>
         <div class="stat alert"><span class="stat-value" id="gCostos">$0</span><span class="stat-label">Costos ingredientes</span></div>
         <div class="stat"><span class="stat-value" id="gNeta">$0</span><span class="stat-label">Ganancia general</span></div>
         <div class="stat"><span class="stat-value" id="gAlfajores">0</span><span class="stat-label">Alfajores completados</span></div>
+        <div class="stat"><span class="stat-value" id="gAlfajoresTerreno">0</span><span class="stat-label">Alfajores en terreno</span></div>
       </div>
       <p class="filtro-resumen" id="gMesLabel"></p>
     </section>
@@ -433,6 +424,52 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
         <p>Agrega el costo de tus ingredientes para calcular la ganancia neta.</p>
       </div>
     </section>
+
+    <section class="card table-card">
+      <h2>Ventas en terreno</h2>
+      <p class="filtro-resumen">Se registran automáticamente al finalizar una venta desde Inventario.</p>
+      <div id="listaVentasTerreno"></div>
+      <div class="empty-state" id="emptyVentasTerreno" hidden>
+        <h3>Sin ventas en terreno</h3>
+        <p>Cuando finalices una salida desde Inventario, aparecerá el detalle aquí.</p>
+      </div>
+    </section>
+  </section>
+
+  <!-- ===================== VISTA: INVENTARIO ===================== -->
+  <section id="vistaInventario" hidden>
+    <section class="card">
+      <h2>Preparar salida</h2>
+      <p class="filtro-resumen">Ingresa cuántos alfajores de cada combinación llevas al salir a vender. Al guardar se reinicia el conteo actual.</p>
+      <div id="invSetupGrid"></div>
+      <div class="form-footer">
+        <span class="preview-total">Total a llevar <strong id="invSetupTotal">0</strong></span>
+        <button type="button" class="btn-primary" id="btnGuardarInventario">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Guardar inventario de salida
+        </button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header-row">
+        <h2>Inventario actual</h2>
+        <button type="button" class="btn-primary" id="btnFinalizarInventario">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          Finalizar venta
+        </button>
+      </div>
+      <div class="stats-strip">
+        <div class="stat good"><span class="stat-value" id="invActualTotal">0</span><span class="stat-label">Quedan</span></div>
+        <div class="stat"><span class="stat-value" id="invInicialTotal">0</span><span class="stat-label">Llevados</span></div>
+        <div class="stat alert"><span class="stat-value" id="invVendidoTotal">0</span><span class="stat-label">Vendidos</span></div>
+      </div>
+      <div id="invGrupos"></div>
+      <div class="empty-state" id="invEmptyState" hidden>
+        <h3>Sin inventario cargado</h3>
+        <p>Completa "Preparar salida" para comenzar a llevar el conteo.</p>
+      </div>
+    </section>
   </section>
 
   <!-- ===================== VISTA: BRUJERIA ===================== -->
@@ -454,49 +491,15 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
       <label class="field"><span>Cliente</span><input id="editCliente"></label>
       <label class="field"><span>Cantidad</span><input id="editCantidad" type="number" min="1"></label>
       <label class="field"><span>Cobertura</span>
-        <select id="editCobertura"><option>Chocolate negro</option><option>Chocolate blanco</option><option>Combinado</option></select>
+        <select id="editCobertura"></select>
       </label>
       <label class="field"><span>Relleno</span>
-        <select id="editRelleno">
-          <option>Manjar</option><option>Manjar Coco</option><option>Manjar Oreo</option><option>Combinada</option>
-        </select>
+        <select id="editRelleno"></select>
       </label>
       <label class="field"><span>Precio unidad</span><input id="editPrecioUnidad" type="number" min="0" step="50"></label>
-      <div class="field full" id="editComboCoberturaWrap" hidden>
-        <span>Cobertura combinada · cantidad por tipo</span>
-        <div class="combo-inline">
-          <label>Chocolate negro<input id="editCantChocolate" type="number" min="0" value="0"></label>
-          <label>Chocolate blanco<input id="editCantChocolateBlanco" type="number" min="0" value="0"></label>
-        </div>
-      </div>
-      <div class="field full" id="editComboRellenoWrap" hidden>
-        <span>Relleno combinado · cantidad por tipo</span>
-        <div class="combo-inline">
-          <label>Manjar<input id="editCantManjar" type="number" min="0" value="0"></label>
-          <label>Manjar Coco<input id="editCantManjarCoco" type="number" min="0" value="0"></label>
-          <label>Manjar Oreo<input id="editCantManjarOreo" type="number" min="0" value="0"></label>
-        </div>
-      </div>
-      <div class="field full" id="editComboGridWrap" hidden>
-        <span>Combinación cobertura × relleno · cantidad por cada uno</span>
-        <div class="combo-grid-wrap">
-          <table class="combo-table">
-            <thead><tr><th></th><th>Manjar</th><th>Manjar Coco</th><th>Manjar Oreo</th></tr></thead>
-            <tbody>
-              <tr><th>Choc. negro</th>
-                <td><input id="editGridNegroManjar" type="number" min="0" value="0"></td>
-                <td><input id="editGridNegroManjarCoco" type="number" min="0" value="0"></td>
-                <td><input id="editGridNegroManjarOreo" type="number" min="0" value="0"></td>
-              </tr>
-              <tr><th>Choc. blanco</th>
-                <td><input id="editGridBlancoManjar" type="number" min="0" value="0"></td>
-                <td><input id="editGridBlancoManjarCoco" type="number" min="0" value="0"></td>
-                <td><input id="editGridBlancoManjarOreo" type="number" min="0" value="0"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <div class="field full" id="editComboCoberturaWrap" hidden></div>
+      <div class="field full" id="editComboRellenoWrap" hidden></div>
+      <div class="field full" id="editComboGridWrap" hidden></div>
       <label class="field full"><span>Observaciones</span><textarea id="editObs"></textarea></label>
     </div>
     <div class="form-footer">
@@ -526,7 +529,7 @@ tr.verde td:first-child{box-shadow:inset 4px 0 0 var(--sage)}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyB56CNnfPsZrTvSNRFfiAPQ4RgF6PqqknM",
   authDomain: "marmotagorda.firebaseapp.com",
@@ -540,16 +543,58 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const pedidosRef = collection(db,"pedidos");
 const costosRef = collection(db,"costos");
+const inventarioRef = collection(db,"inventario");
+const ventasTerrenoRef = collection(db,"ventasTerreno");
 
 let pedidos = [];
 let costos = [];
+let inventario = {}; // { comboId: {cobertura, relleno, cantidadInicial, cantidadActual} }
+let ventasTerreno = []; // sesiones finalizadas de venta en terreno
 let filtroEstado = 'todos';
 let pendingDeleteId = null;
 let pendingDeleteTipo = 'pedido'; // 'pedido' | 'costo'
 let editId = null;
 
+/* Fuente única de verdad para sabores y coberturas: agregar un sabor nuevo
+   aquí lo propaga automáticamente a los selects, las combinaciones y el inventario. */
+const RELLENOS = ['Manjar','Manjar Coco','Manjar Oreo','Manjar Chubi','Manjar Mantequilla de Maní','Manjar Bon o Bon','Manjar Pie de Limón'];
+const PRECIOS_RELLENO = {
+  'Manjar': 1000,
+  'Manjar Coco': 1000,
+  'Manjar Oreo': 1300,
+  'Manjar Chubi': 1300,
+  'Manjar Mantequilla de Maní': 1300,
+  'Manjar Bon o Bon': 1300,
+  'Manjar Pie de Limón': 1300,
+};
+function precioDeRelleno(relleno){
+  return PRECIOS_RELLENO[relleno] || 1000;
+}
+const COBERTURAS = [
+  {label:'Chocolate negro',  key:'negro'},
+  {label:'Chocolate blanco', key:'blanco'},
+];
+const RELLENO_COMBINADA = 'Combinada';
+const COBERTURA_COMBINADO = 'Combinado';
+
+function capFirst(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+function pascalKey(str){
+  const clean = str.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 ]/g,'');
+  return clean.split(/\s+/).filter(Boolean).map(capFirst).join('');
+}
+function idWithPfx(pfx, base){ return pfx ? pfx + capFirst(base) : base; }
+function idCob(pfx, key){ return idWithPfx(pfx, 'cantCob' + capFirst(key)); }
+function idRel(pfx, relleno){ return idWithPfx(pfx, 'cantRel' + pascalKey(relleno)); }
+function idGrid(pfx, key, relleno){ return idWithPfx(pfx, 'grid' + capFirst(key) + pascalKey(relleno)); }
+function idInv(key, relleno){ return key + pascalKey(relleno); }
+
+const COMBOS_INVENTARIO = COBERTURAS.flatMap(c => RELLENOS.map(r => ({
+  id: idInv(c.key, r), cobertura: c.label, relleno: r
+})));
+
 const ICON_EDIT = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
 const ICON_TRASH = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`;
+
 
 /* ---------- utilidades ---------- */
 function escapeHtml(str){
@@ -585,9 +630,9 @@ function toast(msg, tipo){
 }
 /* ---------- combinaciones de relleno / cobertura ---------- */
 function modoCombinacion(relleno, cobertura){
-  if(relleno === 'Combinada' && cobertura === 'Combinado') return 'grid';
-  if(relleno === 'Combinada') return 'relleno';
-  if(cobertura === 'Combinado') return 'cobertura';
+  if(relleno === RELLENO_COMBINADA && cobertura === COBERTURA_COMBINADO) return 'grid';
+  if(relleno === RELLENO_COMBINADA) return 'relleno';
+  if(cobertura === COBERTURA_COMBINADO) return 'cobertura';
   return 'simple';
 }
 function idsFor(pfx){
@@ -596,77 +641,93 @@ function idsFor(pfx){
   return {
     cliente: cap('cliente'), cantidad: cap('cantidad'), relleno: cap('relleno'),
     cobertura: cap('cobertura'), precio: cap('precioUnidad'), obs: cap('obs'),
-    cantChocolate: cap('cantChocolate'), cantChocolateBlanco: cap('cantChocolateBlanco'),
-    cantManjar: cap('cantManjar'), cantManjarCoco: cap('cantManjarCoco'), cantManjarOreo: cap('cantManjarOreo'),
-    gridNegroManjar: cap('gridNegroManjar'), gridNegroManjarCoco: cap('gridNegroManjarCoco'), gridNegroManjarOreo: cap('gridNegroManjarOreo'),
-    gridBlancoManjar: cap('gridBlancoManjar'), gridBlancoManjarCoco: cap('gridBlancoManjarCoco'), gridBlancoManjarOreo: cap('gridBlancoManjarOreo'),
   };
 }
 function leerCantidad(id){
   const el = document.getElementById(id);
   return el ? (Number(el.value)||0) : 0;
 }
-function calcularSumaModo(modo, ids){
-  if(modo === 'cobertura') return leerCantidad(ids.cantChocolate) + leerCantidad(ids.cantChocolateBlanco);
-  if(modo === 'relleno') return leerCantidad(ids.cantManjar) + leerCantidad(ids.cantManjarCoco) + leerCantidad(ids.cantManjarOreo);
+function poblarSelectRelleno(id){
+  document.getElementById(id).innerHTML =
+    RELLENOS.map(r=>`<option>${r}</option>`).join('') + `<option>${RELLENO_COMBINADA}</option>`;
+}
+function poblarSelectCobertura(id){
+  document.getElementById(id).innerHTML =
+    COBERTURAS.map(c=>`<option>${c.label}</option>`).join('') + `<option>${COBERTURA_COMBINADO}</option>`;
+}
+function construirComboCoberturaWrap(pfx){
+  const wrap = document.getElementById(idWithPfx(pfx,'comboCoberturaWrap'));
+  wrap.innerHTML = `<span>Cobertura combinada · cantidad por tipo</span>
+    <div class="combo-inline">
+      ${COBERTURAS.map(c=>`<label>${c.label}<input id="${idCob(pfx,c.key)}" type="number" min="0" value="0"></label>`).join('')}
+    </div>`;
+}
+function construirComboRellenoWrap(pfx){
+  const wrap = document.getElementById(idWithPfx(pfx,'comboRellenoWrap'));
+  wrap.innerHTML = `<span>Relleno combinado · cantidad por tipo</span>
+    <div class="combo-inline">
+      ${RELLENOS.map(r=>`<label>${r}<input id="${idRel(pfx,r)}" type="number" min="0" value="0"></label>`).join('')}
+    </div>`;
+}
+function construirComboGridWrap(pfx){
+  const wrap = document.getElementById(idWithPfx(pfx,'comboGridWrap'));
+  const grupos = COBERTURAS.map(c=>`
+    <div class="combo-grupo">
+      <div class="group-title">${c.label}</div>
+      <div class="combo-inline">
+        ${RELLENOS.map(r=>`<label>${r}<input id="${idGrid(pfx,c.key,r)}" type="number" min="0" value="0"></label>`).join('')}
+      </div>
+    </div>`).join('');
+  wrap.innerHTML = `<span>Combinación cobertura × relleno · cantidad por cada uno</span>${grupos}`;
+}
+function calcularSumaModo(modo, pfx){
+  if(modo === 'cobertura') return COBERTURAS.reduce((s,c)=> s + leerCantidad(idCob(pfx,c.key)), 0);
+  if(modo === 'relleno') return RELLENOS.reduce((s,r)=> s + leerCantidad(idRel(pfx,r)), 0);
   if(modo === 'grid'){
-    return leerCantidad(ids.gridNegroManjar) + leerCantidad(ids.gridNegroManjarCoco) + leerCantidad(ids.gridNegroManjarOreo)
-         + leerCantidad(ids.gridBlancoManjar) + leerCantidad(ids.gridBlancoManjarCoco) + leerCantidad(ids.gridBlancoManjarOreo);
+    return COBERTURAS.reduce((s,c)=> s + RELLENOS.reduce((s2,r)=> s2 + leerCantidad(idGrid(pfx,c.key,r)), 0), 0);
   }
   return null;
 }
-function construirCamposCombinacion(modo, ids){
-  const base = {
-    cantChocolate:0, cantChocolateBlanco:0,
-    cantManjar:0, cantManjarCoco:0, cantManjarOreo:0,
-    mezcla:{negroManjar:0,negroManjarCoco:0,negroManjarOreo:0,blancoManjar:0,blancoManjarCoco:0,blancoManjarOreo:0}
-  };
+function construirCamposCombinacion(modo, pfx){
+  const campos = {coberturaDetalle:null, rellenoDetalle:null, mezcla:null};
   if(modo === 'cobertura'){
-    base.cantChocolate = leerCantidad(ids.cantChocolate);
-    base.cantChocolateBlanco = leerCantidad(ids.cantChocolateBlanco);
+    campos.coberturaDetalle = {};
+    COBERTURAS.forEach(c=>{ campos.coberturaDetalle[c.label] = leerCantidad(idCob(pfx,c.key)); });
   } else if(modo === 'relleno'){
-    base.cantManjar = leerCantidad(ids.cantManjar);
-    base.cantManjarCoco = leerCantidad(ids.cantManjarCoco);
-    base.cantManjarOreo = leerCantidad(ids.cantManjarOreo);
+    campos.rellenoDetalle = {};
+    RELLENOS.forEach(r=>{ campos.rellenoDetalle[r] = leerCantidad(idRel(pfx,r)); });
   } else if(modo === 'grid'){
-    base.mezcla = {
-      negroManjar: leerCantidad(ids.gridNegroManjar),
-      negroManjarCoco: leerCantidad(ids.gridNegroManjarCoco),
-      negroManjarOreo: leerCantidad(ids.gridNegroManjarOreo),
-      blancoManjar: leerCantidad(ids.gridBlancoManjar),
-      blancoManjarCoco: leerCantidad(ids.gridBlancoManjarCoco),
-      blancoManjarOreo: leerCantidad(ids.gridBlancoManjarOreo),
-    };
+    campos.mezcla = {};
+    COBERTURAS.forEach(c=>{
+      campos.mezcla[c.label] = {};
+      RELLENOS.forEach(r=>{ campos.mezcla[c.label][r] = leerCantidad(idGrid(pfx,c.key,r)); });
+    });
   }
-  return base;
+  return campos;
 }
 function aplicarWraps(pfx, modo){
-  const cap = s => pfx ? pfx + s.charAt(0).toUpperCase() + s.slice(1) : s;
-  document.getElementById(cap('comboCoberturaWrap')).hidden = modo !== 'cobertura';
-  document.getElementById(cap('comboRellenoWrap')).hidden = modo !== 'relleno';
-  document.getElementById(cap('comboGridWrap')).hidden = modo !== 'grid';
+  document.getElementById(idWithPfx(pfx,'comboCoberturaWrap')).hidden = modo !== 'cobertura';
+  document.getElementById(idWithPfx(pfx,'comboRellenoWrap')).hidden = modo !== 'relleno';
+  document.getElementById(idWithPfx(pfx,'comboGridWrap')).hidden = modo !== 'grid';
 }
 function detalleProducto(p){
   const modo = modoCombinacion(p.relleno, p.cobertura);
-  if(modo === 'grid'){
-    const combos = [
-      [(p.mezcla||{}).negroManjar,'Manjar','negro'],
-      [(p.mezcla||{}).negroManjarCoco,'Manjar Coco','negro'],
-      [(p.mezcla||{}).negroManjarOreo,'Manjar Oreo','negro'],
-      [(p.mezcla||{}).blancoManjar,'Manjar','blanco'],
-      [(p.mezcla||{}).blancoManjarCoco,'Manjar Coco','blanco'],
-      [(p.mezcla||{}).blancoManjarOreo,'Manjar Oreo','blanco'],
-    ];
-    const partes = combos.filter(c=>Number(c[0])>0).map(c=>`${c[0]} ${c[1]}/${c[2]}`);
-    return partes.length ? partes.join(' · ') : 'Combinada · Combinado';
+  if(modo === 'grid' && p.mezcla){
+    const partes = [];
+    Object.entries(p.mezcla).forEach(([cobLabel, fila])=>{
+      Object.entries(fila||{}).forEach(([rel,n])=>{
+        if(Number(n)>0) partes.push(`${n} ${rel}/${cobLabel.replace('Chocolate ','')}`);
+      });
+    });
+    return partes.length ? partes.join(' · ') : `${p.relleno} · ${p.cobertura}`;
   }
-  if(modo === 'relleno'){
-    const partes = [[p.cantManjar,'Manjar'],[p.cantManjarCoco,'Manjar Coco'],[p.cantManjarOreo,'Manjar Oreo']]
-      .filter(c=>Number(c[0])>0).map(c=>`${c[0]} ${c[1]}`);
+  if(modo === 'relleno' && p.rellenoDetalle){
+    const partes = Object.entries(p.rellenoDetalle).filter(([,n])=>Number(n)>0).map(([rel,n])=>`${n} ${rel}`);
     return `${partes.join(' · ')} · ${p.cobertura}`;
   }
-  if(modo === 'cobertura'){
-    return `${p.relleno} · Combinado (${p.cantChocolate||0} negro, ${p.cantChocolateBlanco||0} blanco)`;
+  if(modo === 'cobertura' && p.coberturaDetalle){
+    const partes = Object.entries(p.coberturaDetalle).filter(([,n])=>Number(n)>0).map(([cob,n])=>`${n} ${cob}`);
+    return `${p.relleno} · ${partes.join(' + ')}`;
   }
   return `${p.relleno} · ${p.cobertura}`;
 }
@@ -683,7 +744,7 @@ function stampToggle(id){
 }
 function estadoChips(p){
   return `<div class="estado-group">
-    ${chip(p.id,'preparacion',p.preparacion,'En preparación')}
+    ${chip(p.id,'preparacion',p.preparacion,'Hecho')}
     ${chip(p.id,'entregado',p.entregado,'Entregado')}
     ${p.pagado ? stampToggle(p.id) : chip(p.id,'pagado',p.pagado,'Pagado')}
   </div>`;
@@ -780,7 +841,9 @@ function actualizarWrapsNuevo(){
 }
 function onRellenoChangeNuevo(){
   const relleno = document.getElementById('relleno').value;
-  document.getElementById('precioUnidad').value = (relleno === 'Manjar Oreo') ? 1200 : 1000;
+  if(relleno !== RELLENO_COMBINADA){
+    document.getElementById('precioUnidad').value = precioDeRelleno(relleno);
+  }
   actualizarPreview();
   actualizarWrapsNuevo();
 }
@@ -791,15 +854,13 @@ function resetFormularioNuevo(){
   const ids = idsFor('');
   document.getElementById(ids.cliente).value = '';
   document.getElementById(ids.cantidad).value = 1;
-  document.getElementById(ids.relleno).value = 'Manjar';
-  document.getElementById(ids.cobertura).value = 'Chocolate negro';
+  document.getElementById(ids.relleno).value = RELLENOS[0];
+  document.getElementById(ids.cobertura).value = COBERTURAS[0].label;
   document.getElementById(ids.precio).value = 1000;
   document.getElementById(ids.obs).value = '';
-  [ids.cantChocolate,ids.cantChocolateBlanco,ids.cantManjar,ids.cantManjarCoco,ids.cantManjarOreo,
-   ids.gridNegroManjar,ids.gridNegroManjarCoco,ids.gridNegroManjarOreo,
-   ids.gridBlancoManjar,ids.gridBlancoManjarCoco,ids.gridBlancoManjarOreo].forEach(id=>{
-    document.getElementById(id).value = 0;
-  });
+  construirComboCoberturaWrap('');
+  construirComboRellenoWrap('');
+  construirComboGridWrap('');
   actualizarWrapsNuevo();
   actualizarPreview();
   document.getElementById(ids.cliente).focus();
@@ -822,14 +883,14 @@ async function agregar(){
 
   const modo = modoCombinacion(relleno, cobertura);
   if(modo !== 'simple'){
-    const suma = calcularSumaModo(modo, ids);
+    const suma = calcularSumaModo(modo, '');
     if(suma !== cantidad){
       const diff = suma < cantidad ? `faltan ${cantidad - suma}` : `sobran ${suma - cantidad}`;
       toast(`La suma de la combinación (${suma}) no coincide con la cantidad de alfajores (${cantidad}), ${diff}`, 'error');
       return;
     }
   }
-  const camposCombo = construirCamposCombinacion(modo, ids);
+  const camposCombo = construirCamposCombinacion(modo, '');
 
   const btn = document.getElementById('btnAgregar');
   btn.disabled = true;
@@ -871,7 +932,8 @@ async function toggleEstado(id, campo, valor){
 function pedirEliminar(id, tipo){
   pendingDeleteId = id;
   pendingDeleteTipo = tipo || 'pedido';
-  document.getElementById('tituloConfirm').textContent = pendingDeleteTipo === 'costo' ? 'Eliminar costo' : 'Eliminar pedido';
+  const titulos = {costo:'Eliminar costo', pedido:'Eliminar pedido', 'venta-terreno':'Eliminar venta en terreno'};
+  document.getElementById('tituloConfirm').textContent = titulos[pendingDeleteTipo] || 'Eliminar';
   document.getElementById('textoConfirm').textContent = 'Esta acción no se puede deshacer.';
   document.getElementById('modalConfirm').hidden = false;
 }
@@ -885,13 +947,19 @@ async function confirmarEliminar(){
     if(pendingDeleteTipo === 'costo'){
       await deleteDoc(doc(db,"costos",pendingDeleteId));
       toast('Costo eliminado');
+    } else if(pendingDeleteTipo === 'venta-terreno'){
+      await deleteDoc(doc(db,"ventasTerreno",pendingDeleteId));
+      toast('Venta en terreno eliminada');
+    } else if(pendingDeleteTipo === 'inventario'){
+      await finalizarVentaTerrenoConfirmado();
+      toast('Venta finalizada y registrada en Ganancias ✓');
     } else {
       await deleteDoc(doc(db,"pedidos",pendingDeleteId));
       toast('Pedido eliminado');
     }
   }catch(err){
     console.error(err);
-    toast('No se pudo eliminar','error');
+    toast('No se pudo completar la acción','error');
   }
   cerrarModalConfirm();
 }
@@ -912,22 +980,24 @@ function abrirEditar(id){
   if(!p) return;
   editId = id;
   const ids = idsFor('edit');
-  document.getElementById(ids.relleno).value = ['Manjar','Manjar Coco','Manjar Oreo','Combinada'].includes(p.relleno) ? p.relleno : 'Manjar';
+  document.getElementById(ids.relleno).value = RELLENOS.concat(RELLENO_COMBINADA).includes(p.relleno) ? p.relleno : RELLENOS[0];
   document.getElementById(ids.cliente).value = p.cliente||'';
   document.getElementById(ids.cantidad).value = p.cantidad||1;
-  document.getElementById(ids.cobertura).value = ['Chocolate negro','Chocolate blanco','Combinado'].includes(p.cobertura) ? p.cobertura : 'Chocolate negro';
-  document.getElementById(ids.cantChocolate).value = p.cantChocolate||0;
-  document.getElementById(ids.cantChocolateBlanco).value = p.cantChocolateBlanco||0;
-  document.getElementById(ids.cantManjar).value = p.cantManjar||0;
-  document.getElementById(ids.cantManjarCoco).value = p.cantManjarCoco||0;
-  document.getElementById(ids.cantManjarOreo).value = p.cantManjarOreo||0;
-  const mezcla = p.mezcla || {};
-  document.getElementById(ids.gridNegroManjar).value = mezcla.negroManjar||0;
-  document.getElementById(ids.gridNegroManjarCoco).value = mezcla.negroManjarCoco||0;
-  document.getElementById(ids.gridNegroManjarOreo).value = mezcla.negroManjarOreo||0;
-  document.getElementById(ids.gridBlancoManjar).value = mezcla.blancoManjar||0;
-  document.getElementById(ids.gridBlancoManjarCoco).value = mezcla.blancoManjarCoco||0;
-  document.getElementById(ids.gridBlancoManjarOreo).value = mezcla.blancoManjarOreo||0;
+  document.getElementById(ids.cobertura).value = COBERTURAS.map(c=>c.label).concat(COBERTURA_COMBINADO).includes(p.cobertura) ? p.cobertura : COBERTURAS[0].label;
+
+  construirComboCoberturaWrap('edit');
+  construirComboRellenoWrap('edit');
+  construirComboGridWrap('edit');
+  COBERTURAS.forEach(c=>{
+    document.getElementById(idCob('edit',c.key)).value = (p.coberturaDetalle||{})[c.label] || 0;
+  });
+  RELLENOS.forEach(r=>{
+    document.getElementById(idRel('edit',r)).value = (p.rellenoDetalle||{})[r] || 0;
+    COBERTURAS.forEach(c=>{
+      document.getElementById(idGrid('edit',c.key,r)).value = ((p.mezcla||{})[c.label]||{})[r] || 0;
+    });
+  });
+
   document.getElementById(ids.precio).value = p.precioUnidad || Math.round((p.total||0)/(p.cantidad||1)) || 1000;
   document.getElementById(ids.obs).value = p.observaciones||'';
   actualizarWrapsEdit();
@@ -952,14 +1022,14 @@ async function guardarEdicion(){
 
   const modo = modoCombinacion(relleno, cobertura);
   if(modo !== 'simple'){
-    const suma = calcularSumaModo(modo, ids);
+    const suma = calcularSumaModo(modo, 'edit');
     if(suma !== cantidad){
       const diff = suma < cantidad ? `faltan ${cantidad - suma}` : `sobran ${suma - cantidad}`;
       toast(`La suma de la combinación (${suma}) no coincide con la cantidad de alfajores (${cantidad}), ${diff}`, 'error');
       return;
     }
   }
-  const camposCombo = construirCamposCombinacion(modo, ids);
+  const camposCombo = construirCamposCombinacion(modo, 'edit');
   try{
     await updateDoc(doc(db,"pedidos",editId),{
       cliente,
@@ -1043,19 +1113,42 @@ function filaCosto(c){
     </div>
   </div>`;
 }
+function filaVentaTerreno(v){
+  const detalles = Object.values(v.detalle||{})
+    .map(d=>`${d.cantidad} ${d.relleno} / ${d.cobertura.replace('Chocolate ','')}`)
+    .join(' · ');
+  return `
+  <div class="ticket">
+    <div class="ticket-top">
+      <div>
+        <div class="ticket-cliente">Venta en terreno</div>
+        <div class="ticket-detalle">${v.fecha ? new Date(v.fecha).toLocaleDateString('es-CL',{day:'2-digit',month:'short',year:'numeric'}) : ''} · ${v.totalAlfajores||0} alfajores</div>
+        ${detalles ? `<div class="ticket-detalle">${escapeHtml(detalles)}</div>` : ''}
+      </div>
+      <strong class="total-cell">${money(v.total)}</strong>
+    </div>
+    <div class="ticket-footer" style="justify-content:flex-end">
+      <button type="button" class="icon-btn danger" aria-label="Eliminar venta en terreno" data-action="eliminar-venta-terreno" data-id="${v.id}">${ICON_TRASH}</button>
+    </div>
+  </div>`;
+}
 function renderGanancias(){
   const completados = pedidos.filter(p=>estado(p)==='verde');
 
-  const ingresos = completados.reduce((s,p)=>s+(Number(p.total)||0),0);
+  const ingresosPedidos = completados.reduce((s,p)=>s+(Number(p.total)||0),0);
+  const ingresosTerreno = ventasTerreno.reduce((s,v)=>s+(Number(v.total)||0),0);
   const costosTotal = costos.reduce((s,c)=>s+(Number(c.costo)||0),0);
-  const neta = ingresos - costosTotal;
+  const neta = (ingresosPedidos + ingresosTerreno) - costosTotal;
   const alfajoresCompletados = completados.reduce((s,p)=>s+(Number(p.cantidad)||0),0);
+  const alfajoresTerreno = ventasTerreno.reduce((s,v)=>s+(Number(v.totalAlfajores)||0),0);
 
-  document.getElementById('gIngresos').textContent = money(ingresos);
+  document.getElementById('gIngresos').textContent = money(ingresosPedidos);
+  document.getElementById('gIngresosTerreno').textContent = money(ingresosTerreno);
   document.getElementById('gCostos').textContent = money(costosTotal);
   document.getElementById('gNeta').textContent = money(neta);
   document.getElementById('gAlfajores').textContent = alfajoresCompletados;
-  document.getElementById('gMesLabel').textContent = `${completados.length} pedido(s) completado(s) en total`;
+  document.getElementById('gAlfajoresTerreno').textContent = alfajoresTerreno;
+  document.getElementById('gMesLabel').textContent = `${completados.length} pedido(s) completado(s) · ${ventasTerreno.length} venta(s) en terreno`;
 
   const listaCostos = document.getElementById('listaCostos');
   const emptyCostos = document.getElementById('emptyCostos');
@@ -1067,6 +1160,181 @@ function renderGanancias(){
     emptyCostos.hidden = true;
     listaCostos.innerHTML = `<div class="mobile-list" style="display:flex">${costosOrdenados.map(filaCosto).join('')}</div>`;
   }
+
+  const listaVentasTerreno = document.getElementById('listaVentasTerreno');
+  const emptyVentasTerreno = document.getElementById('emptyVentasTerreno');
+  const ventasOrdenadas = ventasTerreno.slice().sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||''));
+  if(ventasOrdenadas.length === 0){
+    listaVentasTerreno.innerHTML = '';
+    emptyVentasTerreno.hidden = false;
+  } else {
+    emptyVentasTerreno.hidden = true;
+    listaVentasTerreno.innerHTML = `<div class="mobile-list" style="display:flex">${ventasOrdenadas.map(filaVentaTerreno).join('')}</div>`;
+  }
+}
+
+/* ---------- inventario ---------- */
+function construirInvSetupGrid(){
+  const cont = document.getElementById('invSetupGrid');
+  cont.innerHTML = COBERTURAS.map(c => `
+    <div class="inv-setup-group">
+      <div class="group-title">${c.label}</div>
+      <div class="field-grid">
+        ${RELLENOS.map(r => `
+          <label class="field"><span>${r}</span>
+            <input class="inv-setup-input" data-combo="${idInv(c.key,r)}" type="number" min="0" value="0">
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  cont.querySelectorAll('.inv-setup-input').forEach(inp=>{
+    inp.addEventListener('input', actualizarInvSetupTotal);
+  });
+}
+function actualizarInvSetupTotal(){
+  let total = 0;
+  document.querySelectorAll('.inv-setup-input').forEach(inp=>{ total += Number(inp.value)||0; });
+  document.getElementById('invSetupTotal').textContent = total;
+}
+function rellenarSetupInventario(){
+  document.querySelectorAll('.inv-setup-input').forEach(inp=>{
+    const c = inventario[inp.dataset.combo];
+    inp.value = c ? (c.cantidadInicial||0) : 0;
+  });
+  actualizarInvSetupTotal();
+}
+async function guardarInventarioSalida(){
+  const btn = document.getElementById('btnGuardarInventario');
+  btn.disabled = true;
+  try{
+    const ahora = new Date().toISOString();
+    await Promise.all(COMBOS_INVENTARIO.map(c=>{
+      const val = Number(document.querySelector(`.inv-setup-input[data-combo="${c.id}"]`).value)||0;
+      return setDoc(doc(inventarioRef, c.id), {
+        cobertura: c.cobertura,
+        relleno: c.relleno,
+        cantidadInicial: val,
+        cantidadActual: val,
+        actualizado: ahora
+      });
+    }));
+    toast('Inventario de salida guardado ✓');
+  }catch(err){
+    console.error(err);
+    toast('No se pudo guardar el inventario','error');
+  }finally{
+    btn.disabled = false;
+  }
+}
+async function ajustarInventario(comboId, delta){
+  const actual = inventario[comboId];
+  const inicial = actual ? (actual.cantidadInicial||0) : 0;
+  const base = actual ? (actual.cantidadActual||0) : 0;
+  const nuevo = Math.max(0, base + delta);
+  if(nuevo === base) return;
+  try{
+    const combo = COMBOS_INVENTARIO.find(c=>c.id===comboId);
+    await setDoc(doc(inventarioRef, comboId), {
+      cobertura: combo.cobertura,
+      relleno: combo.relleno,
+      cantidadInicial: inicial,
+      cantidadActual: nuevo,
+      actualizado: new Date().toISOString()
+    });
+  }catch(err){
+    console.error(err);
+    toast('No se pudo actualizar el inventario','error');
+  }
+}
+function renderInventarioLista(){
+  const cont = document.getElementById('invGrupos');
+  const empty = document.getElementById('invEmptyState');
+  const hayDatos = COMBOS_INVENTARIO.some(c => inventario[c.id] && Number(inventario[c.id].cantidadInicial) > 0);
+
+  if(!hayDatos){
+    cont.innerHTML = '';
+    empty.hidden = false;
+    document.getElementById('invActualTotal').textContent = 0;
+    document.getElementById('invInicialTotal').textContent = 0;
+    document.getElementById('invVendidoTotal').textContent = 0;
+    return;
+  }
+  empty.hidden = true;
+
+  let totalActual = 0, totalInicial = 0;
+  const grupos = COBERTURAS.map(c=>{
+    const rellenosConDatos = RELLENOS.filter(r=>{
+      const d = inventario[idInv(c.key,r)];
+      return d && Number(d.cantidadInicial) > 0;
+    });
+    if(rellenosConDatos.length === 0) return '';
+    const filas = rellenosConDatos.map(r=>{
+      const comboId = idInv(c.key, r);
+      const d = inventario[comboId];
+      const actual = Number(d.cantidadActual)||0;
+      const inicial = Number(d.cantidadInicial)||0;
+      const vendidos = Math.max(0, inicial - actual);
+      totalActual += actual;
+      totalInicial += inicial;
+      return `
+      <div class="inv-row ${actual<=0?'agotado':''}">
+        <div>
+          <div class="inv-row-label">${r}</div>
+          <div class="inv-row-sub">Llevabas ${inicial} · Vendidos ${vendidos}</div>
+        </div>
+        <div class="inv-row-controls">
+          <div class="inv-count">${actual}</div>
+          <button type="button" class="inv-btn minus" data-action="inv-menos" data-id="${comboId}" aria-label="Restar uno" ${actual<=0?'disabled':''}>−</button>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="inv-group"><div class="group-title">${c.label}</div><div class="inv-rows">${filas}</div></div>`;
+  }).filter(Boolean).join('');
+
+  cont.innerHTML = grupos;
+  document.getElementById('invActualTotal').textContent = totalActual;
+  document.getElementById('invInicialTotal').textContent = totalInicial;
+  document.getElementById('invVendidoTotal').textContent = Math.max(0, totalInicial - totalActual);
+}
+function pedirFinalizarInventario(){
+  const hayDatos = COMBOS_INVENTARIO.some(c => inventario[c.id] && Number(inventario[c.id].cantidadInicial) > 0);
+  if(!hayDatos){ toast('No hay inventario cargado para finalizar','error'); return; }
+  pendingDeleteId = 'inventario-actual';
+  pendingDeleteTipo = 'inventario';
+  document.getElementById('tituloConfirm').textContent = 'Finalizar venta';
+  document.getElementById('textoConfirm').textContent = 'Se registrará lo vendido en Ganancias como venta en terreno y se limpiará el inventario actual. Esta acción no se puede deshacer.';
+  document.getElementById('modalConfirm').hidden = false;
+}
+async function finalizarVentaTerrenoConfirmado(){
+  const detalle = {};
+  let total = 0, totalAlfajores = 0;
+  COMBOS_INVENTARIO.forEach(c=>{
+    const d = inventario[c.id];
+    if(!d) return;
+    const inicial = Number(d.cantidadInicial)||0;
+    const actual = Number(d.cantidadActual)||0;
+    const vendidos = Math.max(0, inicial - actual);
+    if(vendidos > 0){
+      const precioUnidad = precioDeRelleno(c.relleno);
+      const subtotal = vendidos * precioUnidad;
+      detalle[c.id] = {cobertura: c.cobertura, relleno: c.relleno, cantidad: vendidos, precioUnidad, subtotal};
+      total += subtotal;
+      totalAlfajores += vendidos;
+    }
+  });
+
+  if(totalAlfajores > 0){
+    await addDoc(ventasTerrenoRef, {
+      fecha: new Date().toISOString(),
+      detalle,
+      total,
+      totalAlfajores
+    });
+  }
+  await Promise.all(COMBOS_INVENTARIO.map(c => deleteDoc(doc(inventarioRef, c.id))));
+  document.querySelectorAll('.inv-setup-input').forEach(inp=>{ inp.value = 0; });
+  actualizarInvSetupTotal();
 }
 
 /* ---------- navegación entre vistas ---------- */
@@ -1077,12 +1345,14 @@ function cerrarMenu(){
 function mostrarVista(v){
   document.getElementById('vistaPedidos').hidden = v !== 'pedidos';
   document.getElementById('vistaGanancias').hidden = v !== 'ganancias';
+  document.getElementById('vistaInventario').hidden = v !== 'inventario';
   document.getElementById('vistaBrujeria').hidden = v !== 'brujeria';
   document.querySelectorAll('#menuDropdown [data-vista]').forEach(b=>{
     b.classList.toggle('active', b.dataset.vista === v);
   });
   cerrarMenu();
   if(v === 'ganancias') renderGanancias();
+  if(v === 'inventario'){ rellenarSetupInventario(); renderInventarioLista(); }
   window.scrollTo({top:0, behavior:'instant'});
 }
 
@@ -1099,6 +1369,8 @@ document.addEventListener('click', e => {
     if(act.dataset.action === 'editar')          abrirEditar(act.dataset.id);
     if(act.dataset.action === 'eliminar')        pedirEliminar(act.dataset.id, 'pedido');
     if(act.dataset.action === 'eliminar-costo')  pedirEliminar(act.dataset.id, 'costo');
+    if(act.dataset.action === 'eliminar-venta-terreno') pedirEliminar(act.dataset.id, 'venta-terreno');
+    if(act.dataset.action === 'inv-menos')       ajustarInventario(act.dataset.id, -1);
     return;
   }
   if(e.target.id === 'modalEditar')  cerrarModalEditar();
@@ -1124,6 +1396,11 @@ document.querySelectorAll('#menuDropdown [data-vista]').forEach(b=>{
 });
 
 // Formulario nuevo pedido
+poblarSelectCobertura('cobertura');
+poblarSelectRelleno('relleno');
+construirComboCoberturaWrap('');
+construirComboRellenoWrap('');
+construirComboGridWrap('');
 $('cliente').addEventListener('keydown',      e => e.key==='Enter' && (e.preventDefault(), agregar()));
 $('cantidad').addEventListener('input',        actualizarPreview);
 $('cantidad').addEventListener('keydown',      e => e.key==='Enter' && (e.preventDefault(), agregar()));
@@ -1140,6 +1417,11 @@ document.querySelectorAll('#chipsEstado .chip').forEach(btn =>
 );
 
 // Modal editar
+poblarSelectCobertura('editCobertura');
+poblarSelectRelleno('editRelleno');
+construirComboCoberturaWrap('edit');
+construirComboRellenoWrap('edit');
+construirComboGridWrap('edit');
 $('editCantidad').addEventListener('input',    actualizarPreviewEdit);
 $('editPrecioUnidad').addEventListener('input', actualizarPreviewEdit);
 $('editRelleno').addEventListener('change',    onRellenoChangeEdit);
@@ -1155,6 +1437,11 @@ $('btnConfirmarEliminar').addEventListener('click',   confirmarEliminar);
 $('costoTipo').addEventListener('change', onCostoTipoChange);
 $('btnAgregarCosto').addEventListener('click', agregarCosto);
 $('costoPrecio').addEventListener('keydown', e => e.key==='Enter' && (e.preventDefault(), agregarCosto()));
+
+// Inventario
+construirInvSetupGrid();
+$('btnGuardarInventario').addEventListener('click', guardarInventarioSalida);
+$('btnFinalizarInventario').addEventListener('click', pedirFinalizarInventario);
 
 /* ---------- inicio ---------- */
 document.addEventListener('keydown', e => {
@@ -1198,6 +1485,33 @@ onSnapshot(costosRef, snap => {
 }, err => {
   console.error('Firestore error (costos):', err);
   toast('No se pudieron cargar los costos.', 'error');
+});
+
+onSnapshot(inventarioRef, snap => {
+  try{
+    inventario = {};
+    snap.docs.forEach(d=>{ inventario[d.id] = d.data(); });
+    if(!$('vistaInventario').hidden) renderInventarioLista();
+  }catch(err){
+    console.error('Error en inventario:', err);
+    toast('Error al mostrar el inventario: ' + err.message, 'error');
+  }
+}, err => {
+  console.error('Firestore error (inventario):', err);
+  toast('No se pudo cargar el inventario.', 'error');
+});
+
+onSnapshot(ventasTerrenoRef, snap => {
+  try{
+    ventasTerreno = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    if(!$('vistaGanancias').hidden) renderGanancias();
+  }catch(err){
+    console.error('Error en ventas en terreno:', err);
+    toast('Error al mostrar las ventas en terreno: ' + err.message, 'error');
+  }
+}, err => {
+  console.error('Firestore error (ventasTerreno):', err);
+  toast('No se pudieron cargar las ventas en terreno.', 'error');
 });
 </script>
 </body>
